@@ -106,6 +106,18 @@ def test_http_auth_failure_is_reported_as_auth_required() -> None:
     assert "auth" in (r.error or "").lower()
 
 
+def test_unreachable_http_server_includes_url_in_connection_error() -> None:
+    port = free_port()
+    url = f"http://127.0.0.1:{port}/mcp"
+    spec = ServerSpec("codex", "unreachable", "user", Path("o.json"), "http", url=url)
+
+    (r,) = fetch_all([spec], timeout=3)
+
+    assert r.status == "error"
+    assert f"could not connect to {url}" in (r.error or "")
+    assert any(name in (r.error or "") for name in ("ConnectError", "ConnectTimeout"))
+
+
 def test_identical_servers_are_fetched_once(tools_file: Path) -> None:
     a = stdio_spec(str(REPLAY), str(tools_file), name="a")
     b = ServerSpec("codex", "b", "user", Path("c.toml"), "stdio", command=a.command, args=a.args)
