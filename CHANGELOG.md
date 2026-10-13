@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-13
+
 ### Added
 
 - `upfront [PATH]`: reports, per coding agent, the estimated tokens loaded before the first
@@ -24,3 +26,6 @@ All notable changes to this project are documented here. The format follows
 - Library API: `upfront.profile()` and `upfront.profile_tools_file()`.
 - Examples reproducing codex#19679, opencode#11995 and claude-code#18260, and a demo project
   with tools/list snapshots of three official MCP reference servers.
+
+[Unreleased]: https://github.com/thanatchon36/upfront/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/thanatchon36/upfront/releases/tag/v0.1.0
