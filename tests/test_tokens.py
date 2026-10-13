@@ -15,10 +15,11 @@ def tool(n_props: int) -> dict[str, Any]:
         "description": "Search the index.",
         "inputSchema": {
             "type": "object",
-            "properties": {f"field_{i}": {"type": "string", "description": "A field."}
-                           for i in range(n_props)},
+            "properties": {
+                f"field_{i}": {"type": "string", "description": "A field."} for i in range(n_props)
+            },
         },
-    }  # fmt: skip
+    }
 
 
 def test_counts_scale_with_schema_and_skill_metadata_is_separate_from_body() -> None:

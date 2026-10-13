@@ -29,9 +29,14 @@ class ServerResult:
 
 def _key(spec: ServerSpec) -> tuple[Any, ...]:
     return (
-        spec.transport, spec.command, tuple(spec.args), tuple(sorted(spec.env.items())),
-        spec.cwd, spec.url, tuple(sorted(spec.headers.items())),
-    )  # fmt: skip
+        spec.transport,
+        spec.command,
+        tuple(spec.args),
+        tuple(sorted(spec.env.items())),
+        spec.cwd,
+        spec.url,
+        tuple(sorted(spec.headers.items())),
+    )
 
 
 def _transport(

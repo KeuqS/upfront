@@ -17,9 +17,14 @@ from .conftest import REPLAY
 
 def stdio_spec(*args: str, name: str = "replay") -> ServerSpec:
     return ServerSpec(
-        "claude-code", name, "project", Path(".mcp.json"), "stdio",
-        command=sys.executable, args=[*args],
-    )  # fmt: skip
+        "claude-code",
+        name,
+        "project",
+        Path(".mcp.json"),
+        "stdio",
+        command=sys.executable,
+        args=[*args],
+    )
 
 
 def free_port() -> int:
