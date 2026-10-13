@@ -76,3 +76,11 @@ def test_empty_project_says_so(tmp_path: Path) -> None:
     code, out = run([str(tmp_path)], tmp_path / "home")
     assert code == 0
     assert "nothing" in out.lower()
+
+
+def test_header_hides_the_home_directory(workspace: tuple[Path, Path]) -> None:
+    root, _home = workspace
+    result = runner.invoke(app, [str(root), "-H", "codex"], env={"HOME": str(root.parent)})
+    assert result.exit_code == 0
+    assert str(root.parent) not in result.output.splitlines()[0]
+    assert "~/project" in result.output.splitlines()[0]

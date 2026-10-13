@@ -39,7 +39,7 @@ def _tidy(text: str, root: str) -> str:
 
 def render(report: Report, top: int) -> str:
     root = report.root
-    header = root if root not in ("", ".") else _tidy(str(Path(root).resolve()), "/")
+    header = _tidy(root if root not in ("", ".") else str(Path(root).resolve()), "/")
     lines = [f"upfront {__version__} · {header} · tokens {report.tokenizer}"]
     shown = [h for h in report.harnesses if not h.empty]
     if not shown:

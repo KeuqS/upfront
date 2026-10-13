@@ -2,7 +2,7 @@
 
 > See how many tokens each MCP server, skill and instruction file costs your coding agent before you type a word, and which tools will break in Claude Code, Codex, Gemini CLI or OpenCode.
 
-Status: in development (v0.1.0 target)
+Status: v0.1.0 shipped 2026-10-13 ([release](https://github.com/thanatchon36/upfront/releases/tag/v0.1.0), [PyPI](https://pypi.org/project/upfront/))
 
 ## Problem
 

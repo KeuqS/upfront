@@ -6,6 +6,10 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- The report header no longer shows the home directory when given an absolute path.
+
 ## [0.1.0] - 2026-10-13
 
 ### Added
