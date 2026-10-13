@@ -107,3 +107,12 @@ def test_identical_servers_are_fetched_once(tools_file: Path) -> None:
     ra, rb = fetch_all([a, b], timeout=20)
     assert ra.tools == rb.tools
     assert ra.tools is rb.tools  # one launch, shared result
+
+
+def test_server_stderr_explains_an_early_exit() -> None:
+    crash = stdio_spec(
+        "-c", "import sys; sys.stderr.write('error: GITHUB_TOKEN is not set\\n'); sys.exit(1)"
+    )
+    (r,) = fetch_all([crash], timeout=10)
+    assert r.status == "error"
+    assert "GITHUB_TOKEN is not set" in (r.error or "")

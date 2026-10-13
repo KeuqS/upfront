@@ -77,3 +77,11 @@ def test_skill_metadata_and_body_are_split(workspace: tuple[Path, Path]) -> None
 def test_only_filter(workspace: tuple[Path, Path], harness: str) -> None:
     root, home = workspace
     assert list(discover(root, home=home, env={}, only=[harness]).harnesses) == [harness]
+
+
+def test_stdio_servers_start_in_the_project_directory(workspace: tuple[Path, Path]) -> None:
+    root, home = workspace
+    d = discover(root, home=home, env={})
+    stdio = [s for ctx in d.harnesses.values() for s in ctx.servers if s.transport == "stdio"]
+    assert stdio
+    assert all(s.cwd == str(root) for s in stdio)  # like the agents, which run from the project

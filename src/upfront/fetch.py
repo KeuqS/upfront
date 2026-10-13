@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import os
+import tempfile
 from contextlib import AbstractAsyncContextManager
 from dataclasses import dataclass, field
 from typing import Any, Literal
@@ -72,10 +72,10 @@ def _describe(exc: BaseException, statuses: list[int]) -> str:
 
 
 async def _list_tools(
-    spec: ServerSpec, timeout: float, statuses: list[int]
+    spec: ServerSpec, timeout: float, statuses: list[int], errlog: Any
 ) -> list[dict[str, Any]]:
     tools: list[dict[str, Any]] = []
-    with open(os.devnull, "w") as errlog, anyio.fail_after(timeout):
+    with anyio.fail_after(timeout):
         transport = _transport(spec, errlog, statuses)
         async with Client(transport, read_timeout_seconds=timeout) as client:
             cursor: str | None = None
@@ -90,12 +90,18 @@ async def _list_tools(
 async def fetch_one(spec: ServerSpec, timeout: float = 20) -> ServerResult:
     """Fetch one server's tools. Never raises: failures become ``status="error"``."""
     statuses: list[int] = []
-    try:
-        return ServerResult(spec, "ok", await _list_tools(spec, timeout, statuses))
-    except TimeoutError:
-        return ServerResult(spec, "error", error=f"timed out after {timeout:g}s")
-    except Exception as e:
-        return ServerResult(spec, "error", error=_describe(e, statuses))
+    with tempfile.TemporaryFile("w+", encoding="utf-8", errors="replace") as errlog:
+        try:
+            return ServerResult(spec, "ok", await _list_tools(spec, timeout, statuses, errlog))
+        except TimeoutError:
+            error = f"timed out after {timeout:g}s"
+        except Exception as e:
+            error = _describe(e, statuses)
+        errlog.seek(0)
+        stderr = [line.strip() for line in errlog.read().splitlines() if line.strip()]
+    if stderr:  # a server that exits early usually says why on stderr
+        error += f"; server said: {stderr[-1][:200]}"
+    return ServerResult(spec, "error", error=error)
 
 
 def fetch_all(

@@ -429,4 +429,11 @@ def discover(
         "gemini-cli": lambda: _gemini(root, home),
         "opencode": lambda: _opencode(root, home),
     }
-    return Discovery(root, {h: readers[h]() for h in wanted})
+    found: dict[Harness, HarnessContext] = {h: readers[h]() for h in wanted}
+    for ctx in found.values():
+        for spec in ctx.servers:
+            # Agents start stdio servers from the project directory; relative cwds are
+            # resolved against it (Gemini CLI documents "cwd": "./server-directory").
+            if spec.transport == "stdio":
+                spec.cwd = str(root / spec.cwd) if spec.cwd else str(root)
+    return Discovery(root, found)
