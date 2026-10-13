@@ -12,7 +12,7 @@ from .conftest import REPO
 EXPECT = {
     "codex_19679_skills_budget.py": "fallback budget",
     "opencode_11995_tool_descriptions.py": "descriptions are",
-    "claude_code_18260_ref_params.py": "claude-code#18260",  # the $ref warning cites the issue
+    "claude_code_18260_ref_params.py": "claude-code/issues/18260",  # the $ref warning cites it
 }
 
 
