@@ -1,0 +1,32 @@
+{
+ "_about": "Minimal tool definitions reconstructed from the schemas quoted in public issues. Not real server output.",
+ "tools": [
+  {
+   "name": "API-post-page",
+   "description": "Create a page. Shape taken from anthropics/claude-code#18260 (Notion MCP server): `parent` uses $ref, `properties` is a plain object.",
+   "inputSchema": {
+    "type": "object",
+    "$defs": {"parentRequest": {"type": "object", "properties": {"data_source_id": {"type": "string"}}}},
+    "properties": {
+     "parent": {"$ref": "#/$defs/parentRequest"},
+     "properties": {"type": "object", "additionalProperties": true}
+    },
+    "required": ["parent", "properties"]
+   }
+  },
+  {
+   "name": "schedule_backup",
+   "description": "Schedule a backup. Uses the protobuf-style `google-duration` format reported for the Firebase MCP server in anomalyco/opencode#15161.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {"every": {"type": "string", "format": "google-duration"}},
+    "required": ["every"]
+   }
+  },
+  {
+   "name": "files.read",
+   "description": "A dotted tool name: valid for Gemini, invalid for OpenAI and Anthropic function names.",
+   "inputSchema": {"type": "object", "properties": {"path": {"type": "string"}}}
+  }
+ ]
+}

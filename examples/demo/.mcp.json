@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "filesystem": {"command": "uv", "args": ["run", "--quiet", "--with", "mcp>=2.3", "python", "../servers/replay_server.py", "../servers/filesystem.tools.json"]},
+    "memory": {"command": "uv", "args": ["run", "--quiet", "--with", "mcp>=2.3", "python", "../servers/replay_server.py", "../servers/memory.tools.json"]},
+    "everything": {"command": "uv", "args": ["run", "--quiet", "--with", "mcp>=2.3", "python", "../servers/replay_server.py", "../servers/everything.tools.json"]}
+  }
+}

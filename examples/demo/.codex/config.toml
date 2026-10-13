@@ -1,0 +1,7 @@
+[mcp_servers.filesystem]
+command = "uv"
+args = ["run", "--quiet", "--with", "mcp>=2.3", "python", "../servers/replay_server.py", "../servers/filesystem.tools.json"]
+
+[mcp_servers.issue-scenarios]
+command = "uv"
+args = ["run", "--quiet", "--with", "mcp>=2.3", "python", "../servers/replay_server.py", "../servers/issue-scenarios.tools.json"]
