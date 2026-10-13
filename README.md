@@ -54,8 +54,8 @@ servers (1.0.0), so the numbers above are what those servers really cost.
 ## Install
 
 ```bash
-uvx --from git+https://github.com/thanatchon36/upfront upfront    # run from your project, no install
-pip install upfront                                               # once v0.1.0 is on PyPI
+uvx upfront            # run from your project, no install
+pip install upfront
 ```
 
 Python 3.11+. Then, in a project:
