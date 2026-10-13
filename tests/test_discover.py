@@ -11,7 +11,7 @@ def names(ctx_servers: list) -> set[str]:  # type: ignore[type-arg]
     return {s.name for s in ctx_servers}
 
 
-def test_discovers_all_four_harnesses(workspace: tuple[Path, Path]) -> None:
+def test_discovers_all_five_harnesses(workspace: tuple[Path, Path]) -> None:
     root, home = workspace
     d = discover(root, home=home, env={})
     assert set(d.harnesses) == set(HARNESSES)
@@ -49,6 +49,16 @@ def test_discovers_all_four_harnesses(workspace: tuple[Path, Path]) -> None:
     assert {s.name for s in opencode.skills} == {"triage", "deploy", "release", "review"}
     assert [f.path.name for f in opencode.instructions] == ["AGENTS.md"]
 
+    cursor = d.harnesses["cursor"]
+    by_name = {s.name: s for s in cursor.servers}
+    assert set(by_name) == {"cursor-local", "cursor-remote", "cursor-user"}
+    assert by_name["cursor-local"].transport == "stdio"
+    assert by_name["cursor-local"].cwd == str(root)
+    assert by_name["cursor-remote"].transport == "http"
+    assert by_name["cursor-remote"].url == "https://cursor.example.com/mcp"
+    assert by_name["cursor-remote"].headers == {"X-Key": "cursor"}
+    assert {s.scope for s in cursor.servers} == {"project", "user"}
+
 
 def test_claude_falls_back_to_agents_md_without_claude_md(workspace: tuple[Path, Path]) -> None:
     root, home = workspace
@@ -73,7 +83,7 @@ def test_skill_metadata_and_body_are_split(workspace: tuple[Path, Path]) -> None
     assert "description:" not in s.body
 
 
-@pytest.mark.parametrize("harness", ["codex", "gemini-cli"])
+@pytest.mark.parametrize("harness", ["codex", "gemini-cli", "cursor"])
 def test_only_filter(workspace: tuple[Path, Path], harness: str) -> None:
     root, home = workspace
     assert list(discover(root, home=home, env={}, only=[harness]).harnesses) == [harness]

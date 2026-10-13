@@ -40,10 +40,16 @@ def tools_file(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def workspace(tmp_path: Path, tools_file: Path) -> tuple[Path, Path]:
-    """A project dir and a home dir configured for all four harnesses."""
+    """A project dir and a home dir configured for all five harnesses."""
     root, home = tmp_path / "project", tmp_path / "home"
     py = sys.executable
     stdio = {"command": py, "args": [str(REPLAY), str(tools_file)]}
+    toml_py = py.replace("\\", "/")
+    toml_replay = str(REPLAY).replace("\\", "/")
+    toml_tools_file = str(tools_file).replace("\\", "/")
+    json_py = py.replace("\\", "/")
+    json_replay = str(REPLAY).replace("\\", "/")
+    json_tools_file = str(tools_file).replace("\\", "/")
 
     # Claude Code: project .mcp.json, user + local scope in ~/.claude.json
     write(
@@ -74,7 +80,8 @@ def workspace(tmp_path: Path, tools_file: Path) -> tuple[Path, Path]:
     # Codex: TOML in project and user config, AGENTS.md, .agents/skills
     write(
         root / ".codex" / "config.toml",
-        f'[mcp_servers.replay]\ncommand = "{py}"\nargs = ["{REPLAY}", "{tools_file}"]\n'
+        f'[mcp_servers.replay]\ncommand = "{toml_py}"\n'
+        f'args = ["{toml_replay}", "{toml_tools_file}"]\n'
         '[mcp_servers.figma]\nurl = "https://mcp.figma.com/mcp"\n',
     )
     write(
@@ -102,11 +109,31 @@ def workspace(tmp_path: Path, tools_file: Path) -> tuple[Path, Path]:
     write(
         root / "opencode.jsonc",
         "{\n  // local server\n"
-        f'  "mcp": {{\n    "replay": {{"type": "local", "command": ["{py}", "{REPLAY}", '
-        f'"{tools_file}"], "environment": {{"A": "1"}}}},\n'
+        f'  "mcp": {{\n    "replay": {{"type": "local", "command": ["{json_py}", "{json_replay}", '
+        f'"{json_tools_file}"], "environment": {{"A": "1"}}}},\n'
         '    "jira": {"type": "remote", "url": "https://jira.example.com/mcp",'
         ' "enabled": false,},\n'
         "  },\n}\n",
     )
     skill(root / ".opencode" / "skills", "triage", "Triage new issues.")
+
+    # Cursor: project and user mcp.json files with stdio and remote servers.
+    write(
+        root / ".cursor" / "mcp.json",
+        json.dumps(
+            {
+                "mcpServers": {
+                    "cursor-local": {"type": "stdio", **stdio},
+                    "cursor-remote": {
+                        "url": "https://cursor.example.com/mcp",
+                        "headers": {"X-Key": "cursor"},
+                    },
+                }
+            }
+        ),
+    )
+    write(
+        home / ".cursor" / "mcp.json",
+        json.dumps({"mcpServers": {"cursor-user": {"command": py, "args": ["--user"]}}}),
+    )
     return root, home
