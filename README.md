@@ -84,7 +84,7 @@ upfront --yes    # also start/connect to each MCP server and count its tools
 | Tests tool *behaviour* | no | no | yes (assertions, fuzzing) | no |
 | Actual spend from past sessions | no | `/usage` | no | yes |
 
-Use `/context` for exact numbers inside Claude Code, mcp-assert to test what your tools do, and
+Use `/context` inside Claude Code, mcp-assert to test what your tools do, and
 ccusage to see what you've already spent. upfront answers "what will each agent load, and what
 breaks where" before you start.
 
