@@ -4,7 +4,7 @@
 [![coverage](https://codecov.io/gh/thanatchon36/upfront/graph/badge.svg)](https://codecov.io/gh/thanatchon36/upfront)
 [![PyPI](https://img.shields.io/pypi/v/upfront)](https://pypi.org/project/upfront/)
 [![Python](https://img.shields.io/pypi/pyversions/upfront)](https://pypi.org/project/upfront/)
-[![license: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/thanatchon36/upfront/blob/main/LICENSE)
 
 See how many tokens your MCP servers, skills and instruction files cost a coding agent before
 you type a word, and which tools will break in Claude Code, Codex, Gemini CLI or OpenCode.
@@ -23,7 +23,7 @@ out. Claude Code's `/context` shows this for Claude Code only; OpenCode closed t
 
 ## Demo
 
-![upfront measuring a demo project with three official MCP servers](docs/demo.gif)
+![upfront measuring a demo project with three official MCP servers](https://raw.githubusercontent.com/thanatchon36/upfront/main/docs/demo.gif)
 
 ```console
 $ uv run upfront examples/demo --yes --top 2      # in a clone of this repository
@@ -90,16 +90,16 @@ breaks where" before you start.
 
 ## How it works
 
-1. **Discover**: parse each harness's documented config files ([concepts](docs/concepts.md#where-upfront-looks)).
+1. **Discover**: parse each harness's documented config files ([concepts](https://github.com/thanatchon36/upfront/blob/main/docs/concepts.md#where-upfront-looks)).
 2. **Fetch**: with consent, start each distinct server once (from the project directory, like the agent) and page through `tools/list`.
 3. **Count**: tokenize each tool's wire JSON with `o200k_base`; skill metadata and bodies separately; instruction files whole.
-4. **Check**: run the per-client rules ([table](docs/api.md#compatibility-rules)).
+4. **Check**: run the per-client rules ([table](https://github.com/thanatchon36/upfront/blob/main/docs/api.md#compatibility-rules)).
 
-More: [quickstart](docs/quickstart.md) · [concepts](docs/concepts.md) · [FAQ](docs/faq.md) · [API](docs/api.md) · [decisions](docs/decisions/)
+More: [quickstart](https://github.com/thanatchon36/upfront/blob/main/docs/quickstart.md) · [concepts](https://github.com/thanatchon36/upfront/blob/main/docs/concepts.md) · [FAQ](https://github.com/thanatchon36/upfront/blob/main/docs/faq.md) · [API](https://github.com/thanatchon36/upfront/blob/main/docs/api.md) · [decisions](https://github.com/thanatchon36/upfront/blob/main/docs/decisions/)
 
 ## Limitations
 
-- **Estimates.** One tokenizer for every model; vendors' counts differ, and clients add their own framing around tools ([ADR-0003](docs/decisions/ADR-0003-tokenizer.md)).
+- **Estimates.** One tokenizer for every model; vendors' counts differ, and clients add their own framing around tools ([ADR-0003](https://github.com/thanatchon36/upfront/blob/main/docs/decisions/ADR-0003-tokenizer.md)).
 - **Not the vendor's system prompt.** Only what you add is measured.
 - **Lazy loading isn't modelled.** Claude Code's tool search and OpenCode's lazy MCP loading defer some definitions; upfront reports their full cost.
 - **No OAuth.** Remote servers that need a login show "auth required; not measured". Headers from your config are sent; OAuth flows are not run.
@@ -114,8 +114,8 @@ More: [quickstart](docs/quickstart.md) · [concepts](docs/concepts.md) · [FAQ](
 ## Contributing
 
 Bug reports with a config that reproduces the problem help most. See
-[CONTRIBUTING.md](CONTRIBUTING.md); compatibility rules need a public source.
+[CONTRIBUTING.md](https://github.com/thanatchon36/upfront/blob/main/CONTRIBUTING.md); compatibility rules need a public source.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/thanatchon36/upfront/blob/main/LICENSE)

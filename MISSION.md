@@ -56,7 +56,7 @@ configs on disk ──► discover ──► [Server specs, skills, instruction 
                         tokens (o200k_base) + compat rules
                                         │
                                         ▼
-                         Report ──► table (rich) / JSON / exit code
+                         Report ──► plain-text table / JSON / exit code
 ```
 
 - `upfront/discover.py` — reads Claude Code (`.mcp.json`, `~/.claude.json`), Codex (`.codex/config.toml`, `~/.codex/config.toml`), Gemini CLI (`.gemini/settings.json`, `~/.gemini/settings.json`) and OpenCode (`opencode.json[c]`, `~/.config/opencode/opencode.json`). Also finds skills dirs and instruction files.
@@ -65,7 +65,7 @@ configs on disk ──► discover ──► [Server specs, skills, instruction 
 - `upfront/compat.py` — static rules, each linked to the public issue it comes from.
 - `upfront/report.py` + `upfront/cli.py` — rendering, JSON, budget exit codes.
 
-External deps: `mcp` (official SDK), `tiktoken` (tokenizer), `typer` (CLI, brings `rich`). No LLM calls, no API keys.
+External deps: `mcp` (official SDK), `tiktoken` (tokenizer), `typer` (CLI). No LLM calls, no API keys.
 
 **Safety:** project-level config files can name arbitrary commands, so upfront only launches servers after confirmation (`--yes` for non-interactive use). Without consent it reports static data only.
 
