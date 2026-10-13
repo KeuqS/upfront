@@ -88,6 +88,7 @@ RULES: dict[str, Rule] = {
 
 _OPENAI_NAME = re.compile(r"^[a-zA-Z0-9_-]{1,64}$")
 _ANTHROPIC_NAME = re.compile(r"^[a-zA-Z0-9_-]{1,128}$")
+_SERVER_SEGMENT = re.compile(r"[^a-zA-Z0-9_-]")
 _GEMINI_NAME = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_.:-]{0,127}$")
 
 # JSON Schema 2020-12 defined formats (validation vocabulary, section 7.3).
@@ -151,7 +152,7 @@ def check_tools(harness: str, server: str, tools: list[dict[str, Any]]) -> list[
                 )
             )
         if harness == "claude-code":
-            full = f"mcp__{server}__{name}"
+            full = f"mcp__{_SERVER_SEGMENT.sub('_', server)}__{name}"
             if not _ANTHROPIC_NAME.match(full):
                 out.append(
                     _finding(

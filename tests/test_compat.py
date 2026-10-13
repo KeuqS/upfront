@@ -70,3 +70,9 @@ def test_codex_skills_budget() -> None:
     (finding,) = check_skills("codex", many)
     assert finding.rule == "codex-skills-budget"
     assert check_skills("claude-code", many) == []
+
+
+def test_server_name_characters_do_not_cause_claude_name_errors() -> None:
+    # Clients normalize the server segment; only the tool's own name and the total length count.
+    assert rules_for("claude-code", CLEAN, server="issue-scenarios.tools") == set()
+    assert "anthropic-tool-name" in rules_for("claude-code", t("files.read"), server="a.b")

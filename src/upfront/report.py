@@ -148,7 +148,7 @@ def profile_tools_file(path: Path, *, only: Iterable[str] | None = None) -> Repo
     data = json.loads(path.read_text(encoding="utf-8"))
     tools = data["tools"] if isinstance(data, dict) else data
     wanted = [h for h in HARNESSES if only is None or h in set(only)]
-    name = path.stem
+    name = path.name.split(".")[0]  # "github.tools.json" -> "github"
     out = []
     for harness in wanted:
         spec = ServerSpec(harness, name, "project", path, "stdio", command="(tools file)")
