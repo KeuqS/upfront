@@ -33,16 +33,21 @@ def free_port() -> int:
         return int(s.getsockname()[1])
 
 
+def wait_for_port(port: int, timeout: float = 30) -> None:
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        with socket.socket() as s:
+            if s.connect_ex(("127.0.0.1", port)) == 0:
+                return
+        time.sleep(0.1)
+    raise TimeoutError(f"nothing listening on {port}")
+
+
 @pytest.fixture
 def http_server(tools_file: Path) -> Iterator[str]:
     port = free_port()
     proc = subprocess.Popen([sys.executable, str(REPLAY), str(tools_file), "--http", str(port)])
-    deadline = time.time() + 15
-    while time.time() < deadline:
-        with socket.socket() as s:
-            if s.connect_ex(("127.0.0.1", port)) == 0:
-                break
-        time.sleep(0.1)
+    wait_for_port(port)
     try:
         yield f"http://127.0.0.1:{port}/mcp"
     finally:
@@ -90,7 +95,7 @@ def test_http_auth_failure_is_reported_as_auth_required() -> None:
     )
     proc = subprocess.Popen([sys.executable, "-c", code])
     try:
-        time.sleep(0.5)
+        wait_for_port(port)  # a fixed sleep was too short on GitHub's macOS runners
         spec = ServerSpec(
             "opencode", "jira", "user", Path("o.json"), "http", url=f"http://127.0.0.1:{port}/mcp"
         )
