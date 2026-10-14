@@ -4,11 +4,11 @@
 
 ```bash
 cd your-project
-uvx --from git+https://github.com/thanatchon36/upfront upfront          # what's configured, no servers started
-uvx --from git+https://github.com/thanatchon36/upfront upfront --yes    # also start servers and count their tools
+uvx upfront          # what's configured, no servers started
+uvx upfront --yes    # also start servers and count their tools
 ```
 
-After the PyPI release: `uvx upfront` or `pip install upfront`.
+Or install it: `pip install upfront`.
 
 Without `--yes`, upfront lists the servers it would start and asks (in a terminal) or skips
 them (in CI). Skills and instruction files are always measured; they're just files.
@@ -40,7 +40,7 @@ it works offline and gives the same numbers every time.
 Save your server's tool list and check it on every pull request:
 
 ```yaml
-- run: uvx --from git+https://github.com/thanatchon36/upfront upfront --tools-file tools.json --strict --budget 8000
+- run: uvx upfront --tools-file tools.json --strict --budget 8000
 ```
 
 Or launch the server from a config in the repository and use `--yes`.

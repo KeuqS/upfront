@@ -60,7 +60,7 @@ jobs:
         run: |
           HOME="$(mktemp -d)" uv run upfront examples/demo --yes --top 2 | tee out.txt
           grep -F "claude-code                                      ≈ 6,786  before your first prompt" out.txt
-          grep -F "mcp filesystem (14 tools, project)             ≈ 2,751" out.txt
+          grep -F "mcp filesystem (14 tools, project)             ≈ 2,751  41% of total" out.txt
           grep -F "[openai-tool-name]" out.txt
       - name: Examples named after the issues still run
         run: for f in examples/*.py; do uv run python "$f"; done

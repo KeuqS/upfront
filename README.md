@@ -2,8 +2,8 @@
 
 [![ci](https://github.com/thanatchon36/upfront/actions/workflows/ci.yml/badge.svg)](https://github.com/thanatchon36/upfront/actions/workflows/ci.yml)
 [![coverage](https://codecov.io/gh/thanatchon36/upfront/graph/badge.svg)](https://codecov.io/gh/thanatchon36/upfront)
-[![PyPI](https://img.shields.io/pypi/v/upfront)](https://pypi.org/project/upfront/)
-[![Python](https://img.shields.io/pypi/pyversions/upfront)](https://pypi.org/project/upfront/)
+[![PyPI](https://img.shields.io/pypi/v/upfront?v=1)](https://pypi.org/project/upfront/)
+[![Python](https://img.shields.io/pypi/pyversions/upfront?v=1)](https://pypi.org/project/upfront/)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/thanatchon36/upfront/blob/main/LICENSE)
 
 See how many tokens your MCP servers, skills and instruction files cost a coding agent before
@@ -30,13 +30,13 @@ $ uv run upfront examples/demo --yes --top 2      # in a clone of this repositor
 upfront 0.1.0 · examples/demo · tokens o200k_base
 
 claude-code                                      ≈ 6,786  before your first prompt
-  mcp filesystem (14 tools, project)             ≈ 2,751
+  mcp filesystem (14 tools, project)             ≈ 2,751  41% of total
       read_media_file                              ≈ 285
       read_text_file                               ≈ 251
-  mcp memory (9 tools, project)                  ≈ 2,365
+  mcp memory (9 tools, project)                  ≈ 2,365  35% of total
       create_entities                              ≈ 349
       search_nodes                                 ≈ 320
-  mcp everything (13 tools, project)             ≈ 1,602
+  mcp everything (13 tools, project)             ≈ 1,602  24% of total
       gzip-file-as-resource                        ≈ 239
       get-structured-content                       ≈ 186
   skills (2, name + description)                    ≈ 33  bodies ≈ 48 load on demand
@@ -54,8 +54,8 @@ servers (1.0.0), so the numbers above are what those servers really cost.
 ## Install
 
 ```bash
-uvx --from git+https://github.com/thanatchon36/upfront upfront    # run from your project, no install
-pip install upfront                                               # once v0.1.0 is on PyPI
+uvx upfront            # run from your project, no install
+pip install upfront
 ```
 
 Python 3.11+. Then, in a project:

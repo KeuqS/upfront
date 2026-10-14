@@ -6,7 +6,8 @@ from pathlib import Path
 from typer.testing import CliRunner
 
 from upfront import __version__, profile
-from upfront.cli import app
+from upfront.cli import app, render
+from upfront.report import FileUsage, HarnessReport, Report, ServerUsage, ToolUsage
 
 runner = CliRunner()
 
@@ -84,3 +85,34 @@ def test_header_hides_the_home_directory(workspace: tuple[Path, Path]) -> None:
     assert result.exit_code == 0
     assert str(root.parent) not in result.output.splitlines()[0]
     assert "~/project" in result.output.splitlines()[0]
+
+
+def test_render_shows_server_share_only_for_measured_servers() -> None:
+    measured = ServerUsage(
+        "measured", "project", "stdio", "target", "source", "ok", tools=[ToolUsage("tool", 40)]
+    )
+    skipped = ServerUsage("skipped", "project", "stdio", "target", "source", "skipped")
+    failed = ServerUsage("failed", "project", "stdio", "target", "source", "error", "timeout")
+    report = Report(
+        "/vault",
+        "test",
+        [
+            HarnessReport(
+                "claude-code",
+                servers=[measured, skipped, failed],
+                instructions=[FileUsage("AGENTS.md", 60)],
+            )
+        ],
+    )
+
+    output = render(report, top=3)
+
+    lines = output.splitlines()
+    measured_line = next(line for line in lines if "mcp measured" in line)
+    skipped_line = next(line for line in lines if "mcp skipped" in line)
+    failed_line = next(line for line in lines if "mcp failed" in line)
+    assert measured_line.endswith("≈ 40  40% of total")
+    assert skipped_line.endswith("-  not measured: no consent")
+    assert failed_line.endswith("-  not measured: timeout")
+    assert "of total" not in skipped_line
+    assert "of total" not in failed_line
