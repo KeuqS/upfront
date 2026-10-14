@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -81,6 +82,33 @@ def test_skill_metadata_and_body_are_split(workspace: tuple[Path, Path]) -> None
     assert s.description == "Cut a release."
     assert "Do the thing." in s.body
     assert "description:" not in s.body
+
+
+def test_cursor_supports_explicit_remote_transports_and_reports_invalid_entries(
+    tmp_path: Path,
+) -> None:
+    root, home = tmp_path / "project", tmp_path / "home"
+    (root / ".cursor").mkdir(parents=True)
+    (home / ".cursor").mkdir(parents=True)
+    (root / ".cursor" / "mcp.json").write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "streamable": {"type": "streamable-http", "url": "https://example.com/mcp"},
+                    "events": {"type": "sse", "url": "https://example.com/events"},
+                    "invalid": {"type": "stdio"},
+                    "ignored": "not an object",
+                }
+            }
+        )
+    )
+
+    cursor = discover(root, home=home, env={}, only=["cursor"]).harnesses["cursor"]
+    by_name = {server.name: server for server in cursor.servers}
+    assert by_name["streamable"].transport == "http"
+    assert by_name["events"].transport == "sse"
+    assert set(by_name) == {"streamable", "events"}
+    assert any("invalid" in error and "needs" in error for error in cursor.errors)
 
 
 @pytest.mark.parametrize("harness", ["codex", "gemini-cli", "cursor"])
