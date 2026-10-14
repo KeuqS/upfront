@@ -58,7 +58,7 @@ def _transport(
     return streamable_http_client(spec.url or "", http_client=client)
 
 
-def _describe(exc: BaseException, statuses: list[int]) -> str:
+def _describe(exc: BaseException, statuses: list[int], url: str | None = None) -> str:
     """Turn nested anyio/httpx exception groups into one short, actionable line."""
     auth = [c for c in statuses if c in (401, 403)]
     if auth:
@@ -66,6 +66,8 @@ def _describe(exc: BaseException, statuses: list[int]) -> str:
     while isinstance(exc, BaseExceptionGroup) and exc.exceptions:
         exc = exc.exceptions[0]
     text = f"{type(exc).__name__}: {exc}".strip().rstrip(":")
+    if url and isinstance(exc, (httpx2.ConnectError, httpx2.ConnectTimeout)):
+        return f"could not connect to {url} ({type(exc).__name__})"
     if isinstance(exc, FileNotFoundError):
         return f"command not found: {exc.filename or exc}"
     return text
@@ -96,7 +98,7 @@ async def fetch_one(spec: ServerSpec, timeout: float = 20) -> ServerResult:
         except TimeoutError:
             error = f"timed out after {timeout:g}s"
         except Exception as e:
-            error = _describe(e, statuses)
+            error = _describe(e, statuses, spec.url)
         errlog.seek(0)
         stderr = [line.strip() for line in errlog.read().splitlines() if line.strip()]
     if stderr:  # a server that exits early usually says why on stderr
