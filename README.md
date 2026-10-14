@@ -30,13 +30,13 @@ $ uv run upfront examples/demo --yes --top 2      # in a clone of this repositor
 upfront 0.1.0 · examples/demo · tokens o200k_base
 
 claude-code                                      ≈ 6,786  before your first prompt
-  mcp filesystem (14 tools, project)             ≈ 2,751
+  mcp filesystem (14 tools, project)             ≈ 2,751  41% of total
       read_media_file                              ≈ 285
       read_text_file                               ≈ 251
-  mcp memory (9 tools, project)                  ≈ 2,365
+  mcp memory (9 tools, project)                  ≈ 2,365  35% of total
       create_entities                              ≈ 349
       search_nodes                                 ≈ 320
-  mcp everything (13 tools, project)             ≈ 1,602
+  mcp everything (13 tools, project)             ≈ 1,602  24% of total
       gzip-file-as-resource                        ≈ 239
       get-structured-content                       ≈ 186
   skills (2, name + description)                    ≈ 33  bodies ≈ 48 load on demand

@@ -29,6 +29,11 @@ def _row(label: str, value: str = "", note: str = "") -> str:
     return f"{label:<{LABEL_WIDTH}} {value:>9}  {note}".rstrip()
 
 
+def _share(tokens: int, total: int) -> str:
+    """Show a measured server's share of the harness total."""
+    return f"{tokens / total:.0%} of total" if total > 0 else ""
+
+
 def _tidy(text: str, root: str) -> str:
     """Shorten paths so pasted output doesn't leak the home directory."""
     for prefix in (str(Path(root).resolve()), str(Path(root))):
@@ -50,7 +55,11 @@ def render(report: Report, top: int) -> str:
             label = f"  mcp {s.name} ({s.scope})"
             if s.status == "ok":
                 lines.append(
-                    _row(f"  mcp {s.name} ({len(s.tools)} tools, {s.scope})", _n(s.tokens))
+                    _row(
+                        f"  mcp {s.name} ({len(s.tools)} tools, {s.scope})",
+                        _n(s.tokens),
+                        _share(s.tokens, h.total),
+                    )
                 )
                 lines += [_row(f"      {t.name}", _n(t.tokens)) for t in s.tools[:top]]
             elif s.status == "skipped":
